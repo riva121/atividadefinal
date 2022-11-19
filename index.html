@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros Online</title>
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css">
+
+  </head>
+  <body>
+
+      <header class="container text-center">
+      </header>
+
+      <section class="container text-center">
+      </section>
+
+    <script>
+
+    async function renderIndex() {
+
+      const requestURL = 'https://raw.githubusercontent.com/pauloewerton/testes-json/main/livros.json';
+      const request = new Request(requestURL);
+
+      const response = await fetch(request);
+      const LivrosText = await response.text();
+      const suLivros = JSON.parse(LivrosText);
+
+      geraCards(suLivros);
+
+    }
+
+ 
+    function geraCards(obj) {
+        const livros = obj.livros;
+    
+        const header = document.querySelector('header');
+        const h1 = document.createElement('h1');
+        h1.textContent = `LOJA DE LIVROS`;
+        header.appendChild(h1);
+
+        const section = document.querySelector('section');
+         
+        const row = document.createElement('div');
+            row.setAttribute("class", "row row-cols-3");
+            section.appendChild(row);
+
+        const col = document.createElement('div');
+            col.setAttribute("class", "col-12");
+            row.appendChild(col);
+
+        for (const lv of livros) {
+
+            const card = document.createElement('div');
+            card.setAttribute("class", "card");
+            row.appendChild(card);
+        
+            const cardbody = document.createElement('div');
+            cardbody.setAttribute("class", "card-body");
+            card.appendChild(cardbody);
+
+            const botaocomprar = document.createElement('div');
+            botaocomprar.setAttribute("class", "btn btn-primary");
+            botaocomprar.setAttribute("id", "comprar");
+            botaocomprar.onclick = function() { ComprarBotao(lv) };
+            botaocomprar.textContent = `Comprar`;
+
+            const h4 = document.createElement('h5');
+            const p = document.createElement('p');
+            const img = document.createElement('img');
+            const preco = document.createElement('b');
+            const ano = document.createElement('p');
+            const autor = document.createElement('p');
+            
+            p.textContent = lv.categoria;
+            h4.textContent = lv.titulo;
+            img.src = lv.imgCapa;
+            preco.textContent = "R$ " + lv.preco;
+            ano.textContent = "Ano: " + lv.ano;
+            autor.textContent = "Autor: " + lv.autores.autor1;
+
+            cardbody.appendChild(img);
+            cardbody.appendChild(p);
+            cardbody.appendChild(preco);
+            cardbody.appendChild(ano);
+            cardbody.appendChild(h4); 
+            cardbody.appendChild(autor);
+            cardbody.appendChild(botaocomprar);
+            
+                      
+        }
+ 
+    }
+
+        function ComprarBotao(obs) {
+            alert(`
+            Obrigado pela Compra!
+            ==============================
+            Livro: ${obs.titulo} - Ano: ${obs.ano}
+            ==============================
+            Valor: R$ ${parseFloat(obs.preco)}
+            Frete: R$ 15.00
+            ------------------------------
+            Total: ${parseFloat(obs.preco + 15)}
+            `);
+        }
+
+        renderIndex();
+
+    </script>
+  </body>
+</html>
